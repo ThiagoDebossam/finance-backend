@@ -19,3 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('sign-up', 'UserController@create');
+Route::post('sign-in', 'UserController@login');
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('me', 'UserController@me');
+    Route::post('logout', 'UserController@logout');
+    Route::post('refresh', 'UserController@refresh');
+
+    Route::apiResource('user', 'UserController');
+});
