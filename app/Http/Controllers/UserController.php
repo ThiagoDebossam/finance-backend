@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Http\Requests\{UserCreateRequest, UserLoginRequest};
 
@@ -36,12 +37,22 @@ class UserController extends Controller
         $data = $request->all(['email', 'password']);
 
         $token = auth('api')->attempt($data);
+        $user = auth('api')->user()->getAttributes();
 
         if (!$token) {
             return response()->json(['msg' => 'Usuário e/ou senha inválidos'], 403);
         }
 
-        return response()->json(['token' => $token], 200);;
+        if ($user['remember_token']) {
+            JWTAuth::setToken($user['remember_token'])->invalidate();
+        }
+
+        auth('api')->user()->setAttribute('remember_token', $token);
+        auth('api')->user()->save();
+
+        $data = auth('api')->user();
+        $data['token'] = $token;
+        return response()->json($data, 200);
     }
 
     /**

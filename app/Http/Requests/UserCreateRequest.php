@@ -37,8 +37,8 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => 'required|string|min:5|max:255',
             'email' => "required|email|unique:users,email,{$this->route('user')}",
+            'password_confirmation' => 'required|min:8|max:255',
             'password' => 'required|min:8|max:255|same:password_confirmation',
-            'password_confirmation' => 'required|min:8|max:255'
         ];
     }
 
@@ -53,6 +53,7 @@ class UserCreateRequest extends FormRequest
             'name.required' => 'O campo nome é obrigatório',
             'email.required' => 'O campo e-mail é obrigatório',
             'password.required' => 'O campo senha é obrigatório',
+            'password_confirmation.required' => 'O campo confirme sua senha é obrigatório',
             'name.min' => 'O campo nome deve conter no mínimo 5 caracteres',
             'password.min' => 'O campo senha deve conter no mínimo 8 caracteres',
             'name.max' => 'O campo nome deve conter no máximo 255 caracteres',
