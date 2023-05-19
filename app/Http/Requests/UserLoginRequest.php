@@ -40,6 +40,7 @@ class UserLoginRequest extends FormRequest
     {
         return [
             'email.required' => 'O campo e-mail é obrigatório',
+            'email.email' => 'E-mail inválido',
             'password.required' => 'O campo senha é obrigatório'
         ];
     }

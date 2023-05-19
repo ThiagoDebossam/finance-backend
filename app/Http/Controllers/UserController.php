@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Http\Requests\{UserCreateRequest, UserLoginRequest};
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -37,11 +38,12 @@ class UserController extends Controller
         $data = $request->all(['email', 'password']);
 
         $token = auth('api')->attempt($data);
-        $user = auth('api')->user()->getAttributes();
 
         if (!$token) {
             return response()->json(['msg' => 'Usuário e/ou senha inválidos'], 403);
         }
+
+        $user = auth('api')->user()->getAttributes();
 
         if ($user['remember_token']) {
             JWTAuth::setToken($user['remember_token'])->invalidate();
@@ -52,6 +54,7 @@ class UserController extends Controller
 
         $data = auth('api')->user();
         $data['token'] = $token;
+
         return response()->json($data, 200);
     }
 
