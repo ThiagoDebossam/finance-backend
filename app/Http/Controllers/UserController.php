@@ -45,7 +45,7 @@ class UserController extends Controller
 
         $user = auth('api')->user()->getAttributes();
 
-        if ($user['remember_token']) {
+        if ($user['remember_token'] && JWTAuth::setToken($user['remember_token'])->check()) {
             JWTAuth::setToken($user['remember_token'])->invalidate();
         }
 

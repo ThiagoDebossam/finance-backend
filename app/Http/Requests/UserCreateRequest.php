@@ -37,8 +37,8 @@ class UserCreateRequest extends FormRequest
         return [
             'name' => 'required|string|min:5|max:255',
             'email' => "required|email|unique:users,email,{$this->route('user')}",
-            'password_confirmation' => 'required|min:8|max:255',
             'password' => 'required|min:8|max:255|same:password_confirmation',
+            'password_confirmation' => 'required|min:8|max:255',
         ];
     }
 
