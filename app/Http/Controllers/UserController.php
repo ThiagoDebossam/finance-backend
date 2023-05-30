@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
-use App\Http\Requests\{UserCreateRequest, UserLoginRequest};
+use App\Http\Requests\{UserCreateRequest, UserLoginRequest, UserForgotPasswordRequest};
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ForgotPasswordMail;
 
 class UserController extends Controller
 {
@@ -88,5 +92,15 @@ class UserController extends Controller
         return response()->json(['token' => $token]);
     }
 
+    public function forgotPassword (UserForgotPasswordRequest $request) {
+        try {
+            $user = User::where('email', $request->all(['email']))->first();
+            if (empty($user) || !$user) self::emitException('Usuário não encontrado!');
+            Mail::to($user->email)->send(new ForgotPasswordMail($user));
+            return response()->json(['msg' => true]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
     
 }
