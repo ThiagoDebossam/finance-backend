@@ -21,9 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('sign-up', 'UserController@create');
 Route::post('sign-in', 'UserController@login');
 Route::post('forgot-password', 'UserController@forgotPassword');
-Route::get('a', function () {
-    return view('forgot_password');
-});
+Route::post('recover-password', 'UserController@recoverPassword');
 
 Route::middleware('jwt.auth')->group(function () {
     Route::get('me', 'UserController@me');

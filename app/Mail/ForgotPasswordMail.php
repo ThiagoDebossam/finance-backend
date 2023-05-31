@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 
+
 class ForgotPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -19,9 +20,9 @@ class ForgotPasswordMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -29,17 +30,17 @@ class ForgotPasswordMail extends Mailable
      *
      * @return $this
      */
-    public function build(User $user)
+    public function build()
     {   
         $expiration = Carbon::now()->addMinutes(30);
         $payload = [
-            'id' => $user->id,
-            'email' => $user->email,
-            'name' => $user->name
+            'id' => $this->user->id,
+            'email' => $this->user->email,
+            'name' => $this->user->name
         ];
-        $token = JWTAuth::fromUser($user, ['exp' => $expiration->timestamp, 'iat' => Carbon::now()->timestamp], $payload);
+        $token = JWTAuth::fromUser($this->user, ['exp' => $expiration->timestamp, 'iat' => Carbon::now()->timestamp, 'payload' => $payload]);
         $url = env('APP_URL') . 'forgot-password/' . $token;
         return $this->subject('Recuperação de Conta')
-                ->view('emails.forgot_password', ['user' => $user, 'url'=> $url]);
+                ->view('emails.forgot_password', ['user' => $this->user, 'url'=> $url]);
     }
 }
