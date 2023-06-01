@@ -2,31 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class UserCreateRequest extends FormRequest
+class UserCreateRequest extends BaseRequest
 {
-
-    /**
-     * Indicates if the validator should stop on the first rule failure.
-     *
-     * @var bool
-     */
-    protected $stopOnFirstFailure = true;
-
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-    
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -62,14 +44,5 @@ class UserCreateRequest extends FormRequest
             'email.unique' => 'E-mail em uso, tente outro.',
             'password.same' => 'Senhas não conferem'
         ];
-    }
-
-    public function failedValidation(Validator $validator) 
-    { 
-        throw new HttpResponseException(response()->json([ 
-            'success' => false, 
-            'message' => 'Erros de validação', 
-            'data' => $validator->errors() 
-        ], 422)); 
     }
 }

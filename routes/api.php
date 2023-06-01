@@ -27,6 +27,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::get('me', 'UserController@me');
     Route::post('logout', 'UserController@logout');
     Route::post('refresh', 'UserController@refresh');
+    Route::post('update-password', 'UserController@updatePassword');
 
     Route::apiResource('user', 'UserController');
 });

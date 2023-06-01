@@ -2,30 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class UserForgotPasswordRequest extends FormRequest
+class UserForgotPasswordRequest extends BaseRequest
 {
-    /**
-     * Indicates if the validator should stop on the first rule failure.
-     *
-     * @var bool
-     */
-    protected $stopOnFirstFailure = true;
-
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-    
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -49,14 +32,5 @@ class UserForgotPasswordRequest extends FormRequest
             'email.required' => 'O campo e-mail é obrigatório',
             'email' => 'E-mail inválido'
         ];
-    }
-
-    public function failedValidation(Validator $validator) 
-    { 
-        throw new HttpResponseException(response()->json([ 
-            'success' => false, 
-            'message' => 'Erros de validação', 
-            'data' => $validator->errors() 
-        ], 422)); 
     }
 }

@@ -2,22 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserLoginRequest extends FormRequest
+class UserLoginRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -43,14 +34,5 @@ class UserLoginRequest extends FormRequest
             'email.email' => 'E-mail inválido',
             'password.required' => 'O campo senha é obrigatório'
         ];
-    }
-
-    public function failedValidation(Validator $validator) 
-    { 
-        throw new HttpResponseException(response()->json([ 
-            'success' => false, 
-            'message' => 'Erros de validação', 
-            'data' => $validator->errors() 
-        ], 422)); 
     }
 }

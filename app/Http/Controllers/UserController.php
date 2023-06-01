@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
-use App\Http\Requests\{UserCreateRequest, UserLoginRequest, UserForgotPasswordRequest, UserRecoverPasswordRequest};
+use App\Http\Requests\{UserCreateRequest, UserLoginRequest, UserForgotPasswordRequest, UserRecoverPasswordRequest, UserUpdatePasswordRequest};
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordMail;
@@ -105,8 +105,37 @@ class UserController extends Controller
 
     public function recoverPassword (UserRecoverPasswordRequest $request) {
         try {
-            JWTAuth::setToken($request['token']);
-            return JWTAuth::parseToken()->getPayload();
+            try {
+                JWTAuth::setToken($request['token']);
+                $userId = JWTAuth::parseToken()->getPayload()->get('sub');
+            } catch (Exception $e) {
+                self::emitException('Este link expirou!');
+            }
+            $user = User::find($userId);
+            $user->password = Hash::make($request['password']);
+            $user->save();
+            return response()->json(['msg' => true]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function updatePassword (UserUpdatePasswordRequest $request) {
+        try {
+            $userId = $request->headers->get('user_id');
+            $user = User::find($userId);
+            $data = [
+                'email' => $user->email,
+                'password' => $request['old_password']
+            ];
+
+            $isValid = auth('api')->attempt($data);
+
+            if (!$isValid) self::emitException('Senha atual inválida!');
+
+            $user->password = Hash::make($request['password']);
+            $user->save();
+
             return response()->json(['msg' => true]);
         } catch (Exception $e) {
             throw $e;

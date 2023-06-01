@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Requests;
-
 use App\Http\Requests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserRecoverPasswordRequest extends BaseRequest
-{
+class UserUpdatePasswordRequest extends BaseRequest
+{    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -19,7 +18,7 @@ class UserRecoverPasswordRequest extends BaseRequest
         return [
             'password' => 'required|min:8|max:255|same:password_confirmation',
             'password_confirmation' => 'required|min:8|max:255',
-            'token' => 'required'
+            'old_password' => 'required'
         ];
     }
 
@@ -35,7 +34,8 @@ class UserRecoverPasswordRequest extends BaseRequest
             'password.min' => 'O campo senha deve conter no mínimo 8 caracteres',
             'password_confirmation.required' => 'O campo confirme sua senha é obrigatório',
             'password.required' => 'O campo senha é obrigatório',
-            'token.required' => 'Erro de token',
+            'password.required' => 'O campo senha é obrigatório',
+            'old_password.required' => 'O campo senha atual é obrigatório',
             'password.max' => 'O campo senha deve conter no máximo 255 caracteres'
         ];
     }
