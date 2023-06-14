@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Http\Requests\{AccountCreateRequest};
 
 class AccountController extends Controller
 {
@@ -33,9 +34,15 @@ class AccountController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AccountCreateRequest $request)
     {
-        //
+        $userId = $request->headers->get('user_id');
+
+        Account::create([
+            'name' => $request['name'],
+            'user_id' => $userId
+        ]);
+        return response()->json(['msg' => true]);
     }
 
     /**
