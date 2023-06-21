@@ -30,5 +30,8 @@ Route::middleware('jwt.auth')->group(function () {
     Route::post('update-password', 'UserController@updatePassword');
 
     Route::apiResource('user', 'UserController');
+
     Route::apiResource('account', 'AccountController');
+
+    Route::apiResource('expenses-accounts-month', 'ExpensesAccountsMonthController');
 });

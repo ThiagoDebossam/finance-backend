@@ -17,8 +17,10 @@ class CreateExpensesAccountsMonthsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('month_id');
             $table->unsignedBigInteger('account_id');
+            $table->year('year');
             $table->timestamps();
 
+            $table->unique(['account_id', 'month_id', 'year']);
             $table->foreign('month_id')->references('id')->on('lookup_months')->onDelete('cascade');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
