@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ExpensesAccountsMonth;
-use App\Http\Requests\{AccountCreateRequest};
+use App\Http\Requests\{ExpensesAccountsMonthCreateRequest};
 
 class ExpensesAccountsMonthController extends Controller
 {
@@ -15,7 +15,7 @@ class ExpensesAccountsMonthController extends Controller
      */
     public function index(Request $request)
     {
-        return ExpensesAccountsMonth::where(['account_id' => $request->get('account_id')])->get();
+        return ExpensesAccountsMonth::getAll($request->get('account_id'));
     }
 
     /**
@@ -34,7 +34,7 @@ class ExpensesAccountsMonthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ExpensesAccountsMonthCreateRequest $request)
     {
         ExpensesAccountsMonth::create($request->all());
         return response()->json(['msg' => true]);

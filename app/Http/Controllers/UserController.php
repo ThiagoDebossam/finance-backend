@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
+use App\Models\{User, LookupMonth};
 use App\Http\Requests\{UserCreateRequest, UserLoginRequest, UserForgotPasswordRequest, UserRecoverPasswordRequest, UserUpdatePasswordRequest};
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
@@ -58,6 +58,7 @@ class UserController extends Controller
 
         $data = auth('api')->user();
         $data['token'] = $token;
+        $data['months'] = LookupMonth::all();
 
         return response()->json($data, 200);
     }

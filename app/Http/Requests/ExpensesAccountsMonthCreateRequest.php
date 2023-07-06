@@ -6,16 +6,12 @@ use App\Http\Requests\BaseRequest;
 
 class ExpensesAccountsMonthCreateRequest extends BaseRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            'year' => 'required|number',
-            'account_id' => 'required|number'
+            'year' => 'required|max:4|min:4',
+            'account_id' => 'required|exists:accounts,id',
+            'month_id' => 'required|exists:lookup_months,id',
         ];
     }
 
@@ -27,8 +23,13 @@ class ExpensesAccountsMonthCreateRequest extends BaseRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'O campo ano é obrigatório',
-            'name.year' => 'Ano inválido',
+            'year.required' => 'O campo ano é obrigatório',
+            'year.max' => 'Ano inválido',
+            'year.min' => 'Ano inválido',
+            'account_id.required' => 'O campo conta é obrigatório',
+            'month_id.required' => 'O campo mês é obrigatório',
+            'month_id.exists' => 'Mês inválido',
+            'account_id.exists' => 'Conta inválida',
         ];
     }
 }
